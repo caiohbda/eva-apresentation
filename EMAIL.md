@@ -2,42 +2,37 @@ Assunto: Nova Solução de Automação de Jornadas para Colaboradores
 
 Prezado(a) Gestor(a),
 
-Gostaria de apresentar nossa nova solução de automação de jornadas para colaboradores, desenvolvida para tornar o processo de acompanhamento e comunicação com nossos colaboradores mais eficiente e personalizado.
+Gostaria de apresentar nossa nova solução de automação de jornadas para colaboradores, desenvolvida para tornar o processo de onboarding e acompanhamento mais eficiente e personalizado.
 
 O que a solução faz:
 - Permite criar jornadas personalizadas para cada colaborador
-- Automatiza o envio de comunicações (e-mails, mensagens WhatsApp, etc.)
-- Executa as ações no momento certo, sem necessidade de intervenção manual
-- Mantém um histórico completo das interações com cada colaborador
+- Executa automaticamente uma sequência de ações (e-mails, mensagens WhatsApp, etc.)
+- Gerencia todo o processo sem necessidade de intervenção manual
+- Garante que cada colaborador receba as informações no momento certo
 
 Por que isso resolve nosso problema:
-- Elimina a necessidade de acompanhamento manual das ações
-- Reduz erros humanos no processo de comunicação
-- Garante que nenhuma etapa importante seja esquecida
-- Permite escalar o processo para um número maior de colaboradores
+- Elimina a necessidade de acompanhamento manual de cada etapa
+- Reduz erros humanos no processo
+- Garante consistência no atendimento a todos os colaboradores
+- Permite personalizar a experiência de cada pessoa
 
 Benefícios para o negócio:
-1. Eficiência Operacional
-   - Redução significativa do tempo gasto em tarefas manuais
-   - Maior consistência nas comunicações
-   - Processo escalável para toda a equipe
+1. Economia de tempo: A equipe de RH não precisa mais gerenciar manualmente cada etapa
+2. Maior engajamento: Colaboradores recebem as informações no momento ideal
+3. Escalabilidade: O sistema pode gerenciar múltiplas jornadas simultaneamente
+4. Personalização: Cada colaborador recebe uma experiência única e relevante
+5. Rastreabilidade: Podemos acompanhar todo o processo de forma organizada
 
-2. Experiência do Colaborador
-   - Comunicações mais personalizadas e relevantes
-   - Melhor engajamento com as mensagens
-   - Sensação de cuidado e atenção individual
+Exemplo prático:
+Imagine um novo colaborador que precisa receber várias informações em momentos específicos:
+- E-mail de boas-vindas no primeiro dia
+- Mensagem no WhatsApp com informações sobre a equipe
+- Lembrete para completar o perfil no sistema
+- Convite para a reunião de integração
 
-3. Gestão e Controle
-   - Visibilidade completa do processo
-   - Rastreamento de todas as interações
-   - Facilidade para ajustar e melhorar as jornadas
+Com nossa solução, tudo isso acontece automaticamente, no momento certo, sem necessidade de alguém ficar controlando manualmente cada etapa.
 
-4. Economia
-   - Redução de custos operacionais
-   - Melhor aproveitamento do tempo da equipe
-   - Menos retrabalho e correções
-
-A solução já está pronta para uso e pode ser implementada imediatamente. Nossa equipe técnica está disponível para treinar a equipe e fazer os ajustes necessários conforme a necessidade do negócio.
+Estamos à disposição para demonstrar o sistema em ação e tirar qualquer dúvida.
 
 Atenciosamente,
 Equipe de Desenvolvimento Eva 
