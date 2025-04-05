@@ -65,6 +65,7 @@ const journeyController = JourneyController({
 const employeeJourneyController = EmployeeJourneyController({
   associateJourneyToEmployee,
   employeeJourneyRepository,
+  journeyRepository,
   journeyActionQueue
 });
 
