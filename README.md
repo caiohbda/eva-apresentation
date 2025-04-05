@@ -1,119 +1,191 @@
-# Eva Journey Automation
+# Eva Journey API
 
-Sistema de automação de jornadas para colaboradores da Eva.
+API para gerenciamento de jornadas de funcionários, permitindo associar jornadas a funcionários e executar ações automaticamente.
 
-## Descrição
+## Visão Geral
 
-O Eva Journey Automation é um sistema que permite automatizar jornadas personalizadas para colaboradores. As jornadas são sequências de ações que podem incluir envio de e-mails, mensagens no WhatsApp, chamadas para APIs externas, etc.
+O Eva Journey é um sistema que permite criar e gerenciar jornadas personalizadas para funcionários. Uma jornada é uma sequência de ações que são executadas automaticamente em momentos específicos, como:
+
+- Envio de emails
+- Mensagens no WhatsApp
+- Chamadas para APIs externas
 
 ## Arquitetura
 
-O sistema é construído seguindo os princípios da arquitetura hexagonal e programação funcional:
+O sistema é construído seguindo os princípios da arquitetura hexagonal:
 
 - **Domain**: Contém as entidades e regras de negócio
-- **Application**: Contém os casos de uso da aplicação
-- **Infrastructure**: Contém as implementações concretas (repositórios, serviços, etc.)
+  - `Journey`: Representa uma jornada com suas ações
+  - `JourneyAction`: Representa uma ação da jornada (email, WhatsApp, API)
+  - `EmployeeJourney`: Representa a associação entre funcionário e jornada
 
-## Tecnologias
+- **Application**: Contém os casos de uso
+  - `AssociateJourneyToEmployee`: Associa uma jornada a um funcionário
 
-- Node.js
-- Express
-- MongoDB
-- Redis
-- Bull (para jobs em background)
-- fp-ts (para programação funcional)
-
-## Requisitos
-
-- Node.js 14+
-- MongoDB
-- Redis
+- **Infrastructure**: Implementações concretas
+  - Repositórios MongoDB
+  - Fila de ações em memória
+  - API REST
 
 ## Instalação
 
-1. Clone o repositório:
 ```bash
-git clone https://github.com/your-username/eva-journey.git
-cd eva-journey
-```
-
-2. Instale as dependências:
-```bash
+# Instalar dependências
 npm install
-```
 
-3. Configure o ambiente:
-```bash
+# Configurar variáveis de ambiente
 cp .env.example .env
-# Edite o arquivo .env com suas configurações
+
+# Iniciar o servidor
+npm start
 ```
 
-4. Inicie o MongoDB e Redis:
-```bash
-# Certifique-se que o MongoDB e Redis estão rodando
+## Configuração
+
+Crie um arquivo `.env` com as seguintes variáveis:
+
+```env
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/eva-journey
 ```
 
-5. Inicie o servidor:
-```bash
-npm run dev
+## Endpoints
+
+### Associar Jornada a Funcionário
+
+```http
+POST /api/employee-journeys
 ```
 
-## API Endpoints
-
-### Associar Jornada a Colaborador
-```
-POST /api/employee-journeys/associate
-```
-Body:
+**Request Body:**
 ```json
 {
-  "employeeId": "employee_id",
-  "journeyId": "journey_id",
-  "startDate": "2024-04-05T00:00:00Z"
+  "employeeId": "507f1f77bcf86cd799439011",
+  "journeyId": "507f1f77bcf86cd799439012",
+  "startDate": "2024-03-20T10:00:00Z"
 }
 ```
 
-### Listar Jornadas de um Colaborador
-```
-GET /api/employee-journeys/employee/:employeeId
+**Response (201):**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "507f1f77bcf86cd799439013",
+    "employeeId": "507f1f77bcf86cd799439011",
+    "journeyId": "507f1f77bcf86cd799439012",
+    "startDate": "2024-03-20T10:00:00Z",
+    "status": "pending",
+    "currentActionIndex": 0,
+    "completedActions": []
+  }
+}
 ```
 
-## Testes
+### Listar Jornadas de um Funcionário
 
-Para executar os testes:
-```bash
-npm test
+```http
+GET /api/employee-journeys/:employeeId
 ```
 
-Para executar os testes em modo watch:
-```bash
-npm run test:watch
+**Response (200):**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "507f1f77bcf86cd799439013",
+      "employeeId": "507f1f77bcf86cd799439011",
+      "journeyId": "507f1f77bcf86cd799439012",
+      "startDate": "2024-03-20T10:00:00Z",
+      "status": "pending",
+      "currentActionIndex": 0,
+      "completedActions": []
+    }
+  ]
+}
+```
+
+## Exemplos de Uso
+
+### Criar uma Jornada de Onboarding
+
+```javascript
+// Criar uma jornada
+const journey = {
+  name: "Onboarding",
+  description: "Jornada de integração",
+  actions: [
+    {
+      type: "email",
+      config: {
+        to: "employee@example.com",
+        subject: "Bem-vindo à Eva!",
+        body: "Olá {nome}, bem-vindo à Eva!..."
+      },
+      delay: 0 // Enviar imediatamente
+    },
+    {
+      type: "whatsapp",
+      config: {
+        to: "+5511999999999",
+        message: "Olá {nome}, tudo bem?"
+      },
+      delay: 86400000 // Enviar após 24 horas
+    }
+  ]
+};
+
+// Associar a um funcionário
+const response = await fetch('/api/employee-journeys', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    employeeId: "507f1f77bcf86cd799439011",
+    journeyId: journey.id,
+    startDate: new Date().toISOString()
+  })
+});
 ```
 
 ## Estrutura do Projeto
 
 ```
 src/
-├── domain/
-│   ├── entities/
-│   └── ports/
 ├── application/
 │   └── use-cases/
-└── infrastructure/
-    ├── api/
-    ├── repositories/
-    ├── services/
-    └── queue/
+│       └── AssociateJourneyToEmployee.js
+├── domain/
+│   └── entities/
+│       ├── EmployeeJourney.js
+│       ├── Journey.js
+│       └── JourneyAction.js
+├── infrastructure/
+│   ├── api/
+│   │   ├── controllers/
+│   │   │   └── EmployeeJourneyController.js
+│   │   └── routes/
+│   │       └── employeeJourneyRoutes.js
+│   ├── queue/
+│   │   ├── InMemoryQueue.js
+│   │   └── JourneyActionQueue.js
+│   └── repositories/
+│       ├── MongoEmployeeJourneyRepository.js
+│       ├── MongoEmployeeRepository.js
+│       └── MongoJourneyRepository.js
+└── index.js
 ```
 
-## Contribuição
+## Testes
 
-1. Fork o projeto
-2. Crie sua feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit suas mudanças (`git commit -m 'Add some amazing feature'`)
-4. Push para a branch (`git push origin feature/amazing-feature`)
-5. Abra um Pull Request
+```bash
+# Rodar testes
+npm test
 
-## Licença
+# Verificar cobertura
+npm test -- --coverage
+```
 
-Este projeto está licenciado sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes. 
+## Documentação da API
+
+A documentação completa da API está disponível no arquivo `api-docs.yaml` no formato OpenAPI (Swagger). 

@@ -2,6 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const path = require('path');
 
 // Repositories
 const MongoEmployeeRepository = require('./infrastructure/repositories/MongoEmployeeRepository');
@@ -18,7 +21,7 @@ const AssociateJourneyToEmployee = require('./application/use-cases/AssociateJou
 const EmployeeController = require('./infrastructure/api/controllers/EmployeeController');
 const JourneyController = require('./infrastructure/api/controllers/JourneyController');
 const EmployeeJourneyController = require('./infrastructure/api/controllers/EmployeeJourneyController');
-const JobController = require('./infrastructure/api/controllers/JobController');
+const JobController = require('./infrastructure/api/controllers/jobController');
 
 // Routes
 const createEmployeeRoutes = require('./infrastructure/api/routes/employeeRoutes');
@@ -32,6 +35,10 @@ const port = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Swagger UI Configuration
+const swaggerDocument = YAML.load(path.join(__dirname, '../api-docs.yaml'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI)
@@ -87,4 +94,5 @@ app.use((err, req, res, next) => {
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+  console.log(`Documentação da API disponível em: http://localhost:${port}/api-docs`);
 });
