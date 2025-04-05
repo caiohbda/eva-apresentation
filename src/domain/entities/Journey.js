@@ -1,8 +1,9 @@
 const Journey = {
-  create: ({ name, description, actions = [] }) => ({
+  create: ({ name, description, actions = [], status = 'active' }) => ({
     name,
     description,
-    actions
+    actions,
+    status
   }),
 
   withId: (journey, id) => ({
