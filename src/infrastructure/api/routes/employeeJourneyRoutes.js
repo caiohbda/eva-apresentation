@@ -1,27 +1,19 @@
 const express = require('express');
-const { body, param } = require('express-validator');
-const { validateRequest } = require('../middlewares/validateRequest');
+const { validateRequest, validateParams } = require('../middlewares/validateRequest');
+const { associateJourneySchema, employeeIdParamSchema } = require('../validation/schemas');
 
 const createEmployeeJourneyRoutes = (employeeJourneyController) => {
   const router = express.Router();
 
   router.post(
     '/',
-    [
-      body('employeeId').isMongoId().withMessage('Invalid employee ID'),
-      body('journeyId').isMongoId().withMessage('Invalid journey ID'),
-      body('startDate').isISO8601().withMessage('Invalid start date'),
-      validateRequest
-    ],
+    validateRequest(associateJourneySchema),
     employeeJourneyController.associateJourney
   );
 
   router.get(
     '/:employeeId',
-    [
-      param('employeeId').isMongoId().withMessage('Invalid employee ID'),
-      validateRequest
-    ],
+    validateParams(employeeIdParamSchema),
     employeeJourneyController.getEmployeeJourneys
   );
 
