@@ -1,57 +1,43 @@
-const Queue = require('bull');
-const { Either } = require('fp-ts/lib/Either');
-const { pipe } = require('fp-ts/lib/function');
+const InMemoryQueue = require('./InMemoryQueue');
 
-const createJourneyActionQueue = ({ 
-  employeeJourneyRepository, 
-  journeyRepository, 
-  actionService,
-  redisConfig 
-}) => {
-  const queue = new Queue('journey-actions', redisConfig);
+const JourneyActionQueue = () => {
+  const queue = InMemoryQueue();
 
-  const processAction = async (job) => {
-    const { employeeJourneyId, actionId } = job.data;
-
-    const executeJourneyAction = require('../../application/use-cases/ExecuteJourneyAction');
-    const useCase = executeJourneyAction({
-      employeeJourneyRepository,
-      journeyRepository,
-      actionService
+  const addAction = async (action, employeeJourneyId) => {
+    const job = await queue.addJob({
+      type: action.type,
+      config: action.config,
+      delay: action.delay,
+      order: action.order,
+      employeeJourneyId
     });
 
-    const result = await useCase({ employeeJourneyId, actionId });
-
-    return pipe(
-      result,
-      Either.fold(
-        error => {
-          console.error(`Error executing action ${actionId}:`, error);
-          throw error;
-        },
-        success => {
-          console.log(`Action ${actionId} executed successfully`);
-          return success;
-        }
-      )
-    );
-  };
-
-  const scheduleAction = async (employeeJourneyId, actionId, delay) => {
-    const job = await queue.add(
-      { employeeJourneyId, actionId },
-      { delay: delay * 60 * 1000 } // converte minutos para milissegundos
-    );
     return job;
   };
 
-  // Processa os jobs
-  queue.process(processAction);
+  const getJobs = async (status) => {
+    return queue.getJobs(status);
+  };
+
+  const getJobById = async (id) => {
+    return queue.getJobById(id);
+  };
+
+  const removeJob = async (id) => {
+    return queue.removeJob(id);
+  };
+
+  const clearJobs = async () => {
+    return queue.clearJobs();
+  };
 
   return {
-    scheduleAction,
-    queue
+    addAction,
+    getJobs,
+    getJobById,
+    removeJob,
+    clearJobs
   };
 };
 
-module.exports = createJourneyActionQueue; 
+module.exports = JourneyActionQueue; 
