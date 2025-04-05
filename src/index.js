@@ -16,6 +16,11 @@ const EmployeeController = require('./infrastructure/api/controllers/EmployeeCon
 const JourneyController = require('./infrastructure/api/controllers/JourneyController');
 const EmployeeJourneyController = require('./infrastructure/api/controllers/EmployeeJourneyController');
 
+// Routes
+const createEmployeeRoutes = require('./infrastructure/api/routes/employeeRoutes');
+const createJourneyRoutes = require('./infrastructure/api/routes/journeyRoutes');
+const createEmployeeJourneyRoutes = require('./infrastructure/api/routes/employeeJourneyRoutes');
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -55,19 +60,9 @@ const employeeJourneyController = EmployeeJourneyController({
 });
 
 // Routes
-// Employee routes
-app.post('/api/employees', employeeController.createEmployee);
-app.get('/api/employees', employeeController.getEmployees);
-app.get('/api/employees/:id', employeeController.getEmployee);
-
-// Journey routes
-app.post('/api/journeys', journeyController.createJourney);
-app.get('/api/journeys', journeyController.getJourneys);
-app.get('/api/journeys/:id', journeyController.getJourney);
-
-// Employee Journey routes
-app.post('/api/employee-journeys', employeeJourneyController.associateJourney);
-app.get('/api/employee-journeys/:employeeId', employeeJourneyController.getEmployeeJourneys);
+app.use('/api/employees', createEmployeeRoutes(employeeController));
+app.use('/api/journeys', createJourneyRoutes(journeyController));
+app.use('/api/employee-journeys', createEmployeeJourneyRoutes(employeeJourneyController));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
