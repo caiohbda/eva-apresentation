@@ -31,13 +31,21 @@ O sistema é construído seguindo os princípios da arquitetura hexagonal:
 
 ```bash
 # Instalar dependências
+cd backend
+npm install
+cd ..
+cd frontend
 npm install
 
 # Configurar variáveis de ambiente
 cp .env.example .env
 
 # Iniciar o servidor
-npm start
+npm run dev
+# Em outro terminal
+cd ..
+cd backend
+npm run dev
 ```
 
 ## Configuração
