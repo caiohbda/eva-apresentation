@@ -148,42 +148,13 @@ const response = await fetch('/api/employee-journeys', {
 });
 ```
 
-## Estrutura do Projeto
-
-```
-src/
-├── application/
-│   └── use-cases/
-│       └── AssociateJourneyToEmployee.js
-├── domain/
-│   └── entities/
-│       ├── EmployeeJourney.js
-│       ├── Journey.js
-│       └── JourneyAction.js
-├── infrastructure/
-│   ├── api/
-│   │   ├── controllers/
-│   │   │   └── EmployeeJourneyController.js
-│   │   └── routes/
-│   │       └── employeeJourneyRoutes.js
-│   ├── queue/
-│   │   ├── InMemoryQueue.js
-│   │   └── JourneyActionQueue.js
-│   └── repositories/
-│       ├── MongoEmployeeJourneyRepository.js
-│       ├── MongoEmployeeRepository.js
-│       └── MongoJourneyRepository.js
-└── index.js
-```
-
 ## Testes
 
 ```bash
 # Rodar testes
+cd backend
 npm test
 
-# Verificar cobertura
-npm test -- --coverage
 ```
 
 ## Documentação da API
