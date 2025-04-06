@@ -1,11 +1,12 @@
 const EmployeeJourney = {
-  create: ({ employeeId, journeyId, startDate, status = 'pending' }) => ({
+  create: ({ employeeId, journeyId, startDate, status = 'pending', actionSchedules = [] }) => ({
     employeeId,
     journeyId,
     startDate,
     status,
     currentActionIndex: 0,
-    completedActions: []
+    completedActions: [],
+    actionSchedules
   }),
 
   withId: (employeeJourney, id) => ({
@@ -31,7 +32,20 @@ const EmployeeJourney = {
   updateStatus: (employeeJourney, newStatus) => ({
     ...employeeJourney,
     status: newStatus
-  })
+  }),
+
+  scheduleAction: (employeeJourney, actionId, scheduledTime) => ({
+    ...employeeJourney,
+    actionSchedules: [
+      ...employeeJourney.actionSchedules,
+      { actionId, scheduledTime }
+    ]
+  }),
+
+  getNextScheduledTime: (employeeJourney, actionId) => {
+    const schedule = employeeJourney.actionSchedules.find(s => s.actionId === actionId);
+    return schedule ? schedule.scheduledTime : null;
+  }
 };
 
 module.exports = { EmployeeJourney }; 

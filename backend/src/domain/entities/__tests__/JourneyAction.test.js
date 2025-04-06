@@ -64,7 +64,8 @@ describe('JourneyAction Entity', () => {
         type: 'email',
         config: {
           to: 'test@example.com',
-          subject: 'Test'
+          subject: 'Test',
+          body: 'Test body'
         }
       });
 
@@ -85,7 +86,8 @@ describe('JourneyAction Entity', () => {
         type: 'email',
         config: {
           to: 'employee@example.com',
-          subject: 'Welcome!'
+          subject: 'Welcome!',
+          body: 'Welcome to our company!'
         }
       };
 
@@ -155,7 +157,8 @@ describe('JourneyAction Entity', () => {
         type: 'email',
         config: { 
           to: 'test@example.com',
-          subject: 'Test'
+          subject: 'Test',
+          body: 'Test body'
         }
       });
 
