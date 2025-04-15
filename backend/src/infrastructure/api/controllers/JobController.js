@@ -3,16 +3,16 @@ const createJobController = ({ journeyActionQueue }) => {
     try {
       const { status } = req.query;
       const jobs = await journeyActionQueue.getJobs(status);
-      
+
       res.json({
         success: true,
-        data: jobs
+        data: jobs,
       });
     } catch (error) {
-      console.error('Error getting jobs:', error);
+      console.error("Error getting jobs:", error);
       res.status(500).json({
         success: false,
-        error: error.message || 'Error getting jobs'
+        error: error.message || "Error getting jobs",
       });
     }
   };
@@ -21,23 +21,23 @@ const createJobController = ({ journeyActionQueue }) => {
     try {
       const { id } = req.params;
       const job = await journeyActionQueue.getJobById(id);
-      
+
       if (!job) {
         return res.status(404).json({
           success: false,
-          error: 'Job not found'
+          error: "Job not found",
         });
       }
 
       res.json({
         success: true,
-        data: job
+        data: job,
       });
     } catch (error) {
-      console.error('Error getting job:', error);
+      console.error("Error getting job:", error);
       res.status(500).json({
         success: false,
-        error: error.message || 'Error getting job'
+        error: error.message || "Error getting job",
       });
     }
   };
@@ -46,16 +46,16 @@ const createJobController = ({ journeyActionQueue }) => {
     try {
       const { id } = req.params;
       await journeyActionQueue.removeJob(id);
-      
+
       res.json({
         success: true,
-        message: 'Job removed successfully'
+        message: "Job removed successfully",
       });
     } catch (error) {
-      console.error('Error removing job:', error);
+      console.error("Error removing job:", error);
       res.status(500).json({
         success: false,
-        error: error.message || 'Error removing job'
+        error: error.message || "Error removing job",
       });
     }
   };
@@ -63,16 +63,16 @@ const createJobController = ({ journeyActionQueue }) => {
   const clearJobs = async (req, res) => {
     try {
       await journeyActionQueue.clearJobs();
-      
+
       res.json({
         success: true,
-        message: 'All jobs cleared successfully'
+        message: "All jobs cleared successfully",
       });
     } catch (error) {
-      console.error('Error clearing jobs:', error);
+      console.error("Error clearing jobs:", error);
       res.status(500).json({
         success: false,
-        error: error.message || 'Error clearing jobs'
+        error: error.message || "Error clearing jobs",
       });
     }
   };
@@ -81,8 +81,8 @@ const createJobController = ({ journeyActionQueue }) => {
     getJobs,
     getJob,
     removeJob,
-    clearJobs
+    clearJobs,
   };
 };
 
-module.exports = createJobController; 
+module.exports = createJobController;

@@ -1,23 +1,31 @@
-const express = require('express');
-const { validateRequest, validateParams } = require('../middlewares/validateRequest');
-const { associateJourneySchema, employeeIdParamSchema } = require('../validation/schemas');
+const express = require("express");
+const {
+  validateRequest,
+  validateParams,
+} = require("../middlewares/validateRequest");
+const {
+  createEmployeeJourneySchema,
+  idParamSchema,
+} = require("../validation/schemas");
 
 const createEmployeeJourneyRoutes = (employeeJourneyController) => {
   const router = express.Router();
 
   router.post(
-    '/',
-    validateRequest(associateJourneySchema),
-    employeeJourneyController.associateJourney
+    "/",
+    validateRequest(createEmployeeJourneySchema),
+    employeeJourneyController.createEmployeeJourney
   );
 
+  router.get("/", employeeJourneyController.getEmployeeJourneys);
+
   router.get(
-    '/:employeeId',
-    validateParams(employeeIdParamSchema),
-    employeeJourneyController.getEmployeeJourneys
+    "/:id",
+    validateParams(idParamSchema),
+    employeeJourneyController.getEmployeeJourney
   );
 
   return router;
 };
 
-module.exports = createEmployeeJourneyRoutes; 
+module.exports = createEmployeeJourneyRoutes;

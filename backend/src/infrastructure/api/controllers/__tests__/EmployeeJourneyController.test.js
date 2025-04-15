@@ -1,66 +1,66 @@
-const EmployeeJourneyController = require('../EmployeeJourneyController');
+const EmployeeJourneyController = require("../EmployeeJourneyController");
 
-describe('EmployeeJourneyController', () => {
+describe("EmployeeJourneyController", () => {
   const mockAssociateJourneyToEmployee = jest.fn();
   const mockEmployeeJourneyRepository = {
-    findByEmployeeId: jest.fn()
+    findByEmployeeId: jest.fn(),
   };
   const mockJourneyRepository = {
-    findById: jest.fn()
+    findById: jest.fn(),
   };
   const mockJourneyActionQueue = {
-    addAction: jest.fn()
+    addAction: jest.fn(),
   };
 
   const controller = EmployeeJourneyController({
     associateJourneyToEmployee: mockAssociateJourneyToEmployee,
     employeeJourneyRepository: mockEmployeeJourneyRepository,
     journeyRepository: mockJourneyRepository,
-    journeyActionQueue: mockJourneyActionQueue
+    journeyActionQueue: mockJourneyActionQueue,
   });
 
   const mockReq = {
     body: {},
-    params: {}
+    params: {},
   };
 
   const mockRes = {
     status: jest.fn().mockReturnThis(),
-    json: jest.fn()
+    json: jest.fn(),
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('associateJourney', () => {
-    it('should successfully associate a journey to an employee', async () => {
-      const employeeId = '123';
-      const journeyId = '456';
-      const startDate = '2024-03-20';
+  describe("createEmployeeJourney", () => {
+    it("should successfully associate a journey to an employee", async () => {
+      const employeeId = "123";
+      const journeyId = "456";
+      const startDate = "2024-03-20";
 
       const employeeJourney = {
-        id: '789',
+        id: "789",
         employeeId,
         journeyId,
         startDate: new Date(startDate),
-        status: 'pending',
+        status: "pending",
         currentActionIndex: 0,
-        completedActions: []
+        completedActions: [],
       };
 
       const journey = {
         id: journeyId,
-        name: 'Onboarding',
+        name: "Onboarding",
         actions: [
           {
-            type: 'email',
+            type: "email",
             config: {
-              to: 'employee@example.com',
-              subject: 'Welcome!'
-            }
-          }
-        ]
+              to: "employee@example.com",
+              subject: "Welcome!",
+            },
+          },
+        ],
       };
 
       mockReq.body = { employeeId, journeyId, startDate };
@@ -68,129 +68,117 @@ describe('EmployeeJourneyController', () => {
       mockJourneyRepository.findById.mockResolvedValue(journey);
       mockJourneyActionQueue.addAction.mockResolvedValue();
 
-      await controller.associateJourney(mockReq, mockRes);
+      await controller.createEmployeeJourney(mockReq, mockRes);
 
       expect(mockRes.status).toHaveBeenCalledWith(201);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        success: true,
-        data: {
-          id: employeeJourney.id,
-          employeeId: employeeJourney.employeeId,
-          journeyId: employeeJourney.journeyId,
-          startDate: employeeJourney.startDate,
-          status: employeeJourney.status,
-          currentActionIndex: employeeJourney.currentActionIndex,
-          completedActions: employeeJourney.completedActions
-        }
-      });
-      expect(mockJourneyActionQueue.addAction).toHaveBeenCalledWith(journey.actions[0], employeeJourney.id);
+      expect(mockRes.json).toHaveBeenCalledWith(employeeJourney);
+      expect(mockJourneyActionQueue.addAction).toHaveBeenCalledWith(
+        journey.actions[0],
+        employeeJourney.id
+      );
     });
 
-    it('should handle errors when associating journey', async () => {
-      const error = new Error('Test error');
+    it("should handle errors when associating journey", async () => {
+      const error = new Error("Test error");
       mockAssociateJourneyToEmployee.mockRejectedValue(error);
 
-      await controller.associateJourney(mockReq, mockRes);
+      await controller.createEmployeeJourney(mockReq, mockRes);
 
       expect(mockRes.status).toHaveBeenCalledWith(500);
       expect(mockRes.json).toHaveBeenCalledWith({
-        success: false,
-        error: error.message
+        error: "Erro ao criar jornada do funcionário",
       });
     });
 
-    it('should handle journey not found error', async () => {
-      const employeeId = '123';
-      const journeyId = '456';
-      const startDate = '2024-03-20';
+    it("should handle journey not found error", async () => {
+      const employeeId = "123";
+      const journeyId = "456";
+      const startDate = "2024-03-20";
 
       const employeeJourney = {
-        id: '789',
+        id: "789",
         employeeId,
         journeyId,
         startDate: new Date(startDate),
-        status: 'pending'
+        status: "pending",
       };
 
       mockReq.body = { employeeId, journeyId, startDate };
       mockAssociateJourneyToEmployee.mockResolvedValue(employeeJourney);
       mockJourneyRepository.findById.mockResolvedValue(null);
 
-      await controller.associateJourney(mockReq, mockRes);
+      await controller.createEmployeeJourney(mockReq, mockRes);
 
-      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.status).toHaveBeenCalledWith(404);
       expect(mockRes.json).toHaveBeenCalledWith({
-        success: false,
-        error: 'Journey not found'
+        error: "Jornada não encontrada",
       });
     });
 
-    it('should handle journey with no actions', async () => {
-      const employeeId = '123';
-      const journeyId = '456';
-      const startDate = '2024-03-20';
+    it("should handle journey with no actions", async () => {
+      const employeeId = "123";
+      const journeyId = "456";
+      const startDate = "2024-03-20";
 
       const employeeJourney = {
-        id: '789',
+        id: "789",
         employeeId,
         journeyId,
         startDate: new Date(startDate),
-        status: 'pending'
+        status: "pending",
       };
 
       const journey = {
         id: journeyId,
-        name: 'Onboarding',
-        actions: []
+        name: "Onboarding",
+        actions: [],
       };
 
       mockReq.body = { employeeId, journeyId, startDate };
       mockAssociateJourneyToEmployee.mockResolvedValue(employeeJourney);
       mockJourneyRepository.findById.mockResolvedValue(journey);
 
-      await controller.associateJourney(mockReq, mockRes);
+      await controller.createEmployeeJourney(mockReq, mockRes);
 
       expect(mockRes.status).toHaveBeenCalledWith(201);
       expect(mockJourneyActionQueue.addAction).not.toHaveBeenCalled();
     });
   });
 
-  describe('getEmployeeJourneys', () => {
-    it('should return employee journeys', async () => {
-      const employeeId = '123';
+  describe("getEmployeeJourneys", () => {
+    it("should return employee journeys", async () => {
+      const employeeId = "123";
       const journeys = [
         {
-          id: '789',
+          id: "789",
           employeeId,
-          journeyId: '456',
+          journeyId: "456",
           startDate: new Date(),
-          status: 'pending'
-        }
+          status: "pending",
+        },
       ];
 
       mockReq.params = { employeeId };
-      mockEmployeeJourneyRepository.findByEmployeeId.mockResolvedValue(journeys);
+      mockEmployeeJourneyRepository.findByEmployeeId.mockResolvedValue(
+        journeys
+      );
 
       await controller.getEmployeeJourneys(mockReq, mockRes);
 
       expect(mockRes.status).toHaveBeenCalledWith(200);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        success: true,
-        data: journeys
-      });
+      expect(mockRes.json).toHaveBeenCalledWith(journeys);
     });
 
-    it('should handle errors when fetching journeys', async () => {
-      const error = new Error('Test error');
+    it("should handle errors when fetching journeys", async () => {
+      const error = new Error("Test error");
       mockEmployeeJourneyRepository.findByEmployeeId.mockRejectedValue(error);
 
       await controller.getEmployeeJourneys(mockReq, mockRes);
 
       expect(mockRes.status).toHaveBeenCalledWith(500);
       expect(mockRes.json).toHaveBeenCalledWith({
-        success: false,
-        error: error.message
+        error: "Erro ao buscar jornadas dos funcionários",
       });
     });
   });
-}); 
+});
