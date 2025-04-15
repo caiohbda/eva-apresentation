@@ -1,4 +1,4 @@
-const InMemoryQueue = require('./InMemoryQueue');
+const InMemoryQueue = require("./InMemoryQueue");
 
 const JourneyActionQueue = () => {
   const queue = InMemoryQueue();
@@ -9,7 +9,7 @@ const JourneyActionQueue = () => {
       config: action.config,
       delay: action.delay,
       order: action.order,
-      employeeJourneyId
+      employeeJourneyId,
     });
 
     return job;
@@ -31,13 +31,29 @@ const JourneyActionQueue = () => {
     return queue.clearJobs();
   };
 
+  const getQueues = async () => {
+    const jobs = await queue.getJobs();
+    return jobs.map((job) => ({
+      id: job.id,
+      journeyId: job.data.employeeJourneyId,
+      action: {
+        type: job.data.type,
+        config: job.data.config,
+      },
+      status: job.status,
+      createdAt: job.createdAt,
+      updatedAt: job.updatedAt,
+    }));
+  };
+
   return {
     addAction,
     getJobs,
     getJobById,
     removeJob,
-    clearJobs
+    clearJobs,
+    getQueues,
   };
 };
 
-module.exports = JourneyActionQueue; 
+module.exports = JourneyActionQueue;

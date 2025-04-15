@@ -1,12 +1,13 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Layout from './components/Layout'
-import Home from './pages/Home'
-import NewEmployee from './pages/NewEmployee'
-import NewJourney from './pages/NewJourney'
-import JourneyDetails from './pages/JourneyDetails'
-import EmployeeDetails from './pages/EmployeeDetails'
-import AssociateJourney from './pages/AssociateJourney'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import NewEmployee from "./pages/NewEmployee";
+import NewJourney from "./pages/NewJourney";
+import JourneyDetails from "./pages/JourneyDetails";
+import EmployeeDetails from "./pages/EmployeeDetails";
+import AssociateJourney from "./pages/AssociateJourney";
+import Queues from "./pages/Queues";
+import "./App.css";
 
 function App() {
   return (
@@ -19,10 +20,11 @@ function App() {
           <Route path="/employee/:id" element={<EmployeeDetails />} />
           <Route path="/journey/:id" element={<JourneyDetails />} />
           <Route path="/associate" element={<AssociateJourney />} />
+          <Route path="/queues" element={<Queues />} />
         </Routes>
       </Layout>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;
